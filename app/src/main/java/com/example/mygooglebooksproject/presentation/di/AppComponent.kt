@@ -11,5 +11,4 @@ import javax.inject.Singleton
 @Component(modules = [AppModule::class, DataModule::class, DomainModule::class, NetworkModule::class])
 interface AppComponent {
     fun inject(booksListFragment: BooksListFragment)
-    val booksListAdapter: BooksListAdapter
 }

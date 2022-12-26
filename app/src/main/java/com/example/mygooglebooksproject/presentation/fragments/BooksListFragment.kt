@@ -18,14 +18,13 @@ import com.example.mygooglebooksproject.presentation.app.appComponent
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModel
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModelFactory
 import javax.inject.Inject
-import kotlin.properties.Delegates
 
 class BooksListFragment : Fragment() {
     @Inject
     lateinit var viewModelFactory: BooksListViewModelFactory
     private lateinit var viewModel: BooksListViewModel
 
-    lateinit var adapter: BooksListAdapter
+    private val adapter = BooksListAdapter()
 
     private val component by lazy { requireContext().applicationContext.appComponent }
 
@@ -49,7 +48,6 @@ class BooksListFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        adapter = component.booksListAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
@@ -69,7 +67,6 @@ class BooksListFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 return false
             }
-
         })
 
         binding.settingsButton.setOnClickListener { //слушаем нажатие на кнопку настройки и переходим на фрагмент настроек
@@ -82,7 +79,6 @@ class BooksListFragment : Fragment() {
                 adapter.itemsCount = it.toInt()
             }
         }
-
         return binding.root
     }
 
