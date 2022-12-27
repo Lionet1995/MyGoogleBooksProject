@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,25 +32,16 @@ class BooksListFragment : Fragment() {
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        val binding: FragmentBooksListBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_books_list,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val binding = FragmentBooksListBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(this, viewModelFactory)[BooksListViewModel::class.java]
-
-        binding.lifecycleOwner = viewLifecycleOwner
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
-        viewModel.booksList.observe(viewLifecycleOwner) { //обзервим изменения в лайвдате и отдаем измененный список адаптеру
+        viewModel.booksList.observe(viewLifecycleOwner) {
             adapter.books = it
         }
 
@@ -69,11 +59,11 @@ class BooksListFragment : Fragment() {
             }
         })
 
-        binding.settingsButton.setOnClickListener { //слушаем нажатие на кнопку настройки и переходим на фрагмент настроек
+        binding.settingsButton.setOnClickListener {
             goToSettings()
         }
 
-        parentFragmentManager.setFragmentResultListener(SettingsFragment.REQUEST_CODE, // возвращаем с фрагмента настроек новое число айтемов для ресайклера и обновляем
+        parentFragmentManager.setFragmentResultListener(SettingsFragment.REQUEST_CODE,
             viewLifecycleOwner) { _, data ->
             data.getString(SettingsFragment.COUNT_VALUE)?.let {
                 adapter.itemsCount = it.toInt()

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mygooglebooksproject.R
@@ -14,17 +13,9 @@ import com.google.android.material.snackbar.Snackbar
 
 class SettingsFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        val binding: FragmentSettingsBinding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_settings,
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
+
+        val binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         with(binding) {
             saveButton.setOnClickListener {
@@ -33,15 +24,13 @@ class SettingsFragment : Fragment() {
                         bundleOf(COUNT_VALUE to editText.text.toString()))
                     findNavController().popBackStack()
                 } else {
-                    val snackbar =
-                        Snackbar.make(root, "This field can't be empty", Snackbar.LENGTH_SHORT)
+                    val snackbar = Snackbar.make(root, getString(R.string.emptyFieldText), Snackbar.LENGTH_SHORT)
                     snackbar.show()
                 }
             }
         }
         return binding.root
     }
-
 
     companion object {
         const val COUNT_VALUE = "COUNT"

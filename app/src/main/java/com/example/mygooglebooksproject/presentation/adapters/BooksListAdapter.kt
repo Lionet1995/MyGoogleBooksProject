@@ -23,10 +23,6 @@ class BooksListAdapter(
             notifyDataSetChanged()
         }
 
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BooksViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = BookItemBinding.inflate(inflater, parent, false)
@@ -36,7 +32,6 @@ class BooksListAdapter(
     override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
 
         with(holder.binding) {
-            book = books[position]
             bookImage.loadImageFromUrl(books[position].source ?: DEFAULT_IMAGE)
             bookTitle.text = books[position].title
             bookDescription.text = books[position].description
