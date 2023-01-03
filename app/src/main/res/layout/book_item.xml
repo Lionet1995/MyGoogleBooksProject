@@ -1,64 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:layout_margin="5dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginTop="15dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/bookImage"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars[3]" />
+
+    <TextView
+        android:id="@+id/bookTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:padding="5dp"
-        android:orientation="horizontal">
+        android:layout_marginStart="15dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:hint="@string/book_name"
+        android:maxLines="1"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toRightOf="@id/bookImage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/bookImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            tools:srcCompat="@tools:sample/avatars[3]"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+    <TextView
+        android:id="@+id/bookDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:hint="@string/some_book_description"
+        android:maxLines="3"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toRightOf="@id/bookImage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bookTitle" />
 
-            <TextView
-                android:hint="Book name"
-                android:gravity="center_horizontal"
-                android:id="@+id/bookTitle"
-                android:layout_marginStart="5dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAllCaps="true"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:ellipsize="middle"
-                android:maxLines="2"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/bookImage"/>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bookImage" />
 
-            <TextView
-                android:hint="Some book description"
-                android:id="@+id/bookDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="10dp"
-                android:ellipsize="end"
-                android:maxLines="4"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/bookTitle"
-                app:layout_constraintLeft_toRightOf="@id/bookImage"
-                app:layout_constraintRight_toRightOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
