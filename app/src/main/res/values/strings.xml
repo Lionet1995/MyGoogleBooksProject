@@ -5,4 +5,5 @@
     <string name="some_book_description">Some book description</string>
     <string name="book_name">Book name</string>
     <string name="search_books">Search book...</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

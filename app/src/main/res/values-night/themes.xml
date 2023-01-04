@@ -10,7 +10,13 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">?attr/colorOnSecondary</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="buttonStyle">
+        <item name="backgroundTint">@color/teal_200</item>
+        <item name="cornerRadius">21dp</item>
+        <item name="textFillColor">@color/black</item>
     </style>
 </resources>
