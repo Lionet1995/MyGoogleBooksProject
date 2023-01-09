@@ -2,7 +2,6 @@ package com.example.mygooglebooksproject.data.models
 
 import com.example.mygooglebooksproject.domain.models.Book
 
-
 data class SearchResult(val items: List<BookModel>)
 
 fun SearchResult.convertToDomainModel(): List<Book> {

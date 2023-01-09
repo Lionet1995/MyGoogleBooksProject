@@ -1,39 +1,64 @@
 package com.example.mygooglebooksproject.presentation.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mygooglebooksproject.R
+import com.example.mygooglebooksproject.data.utils.Configs
 import com.example.mygooglebooksproject.databinding.FragmentSettingsBinding
+import com.example.mygooglebooksproject.presentation.app.appComponent
+import com.example.mygooglebooksproject.presentation.viewmodels.SettingsFragmentViewModel
+import com.example.mygooglebooksproject.presentation.viewmodels.SettingsFragmentViewModelFactory
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class SettingsFragment : Fragment() {
+    @Inject
+    lateinit var viewModelFactory: SettingsFragmentViewModelFactory
+    private lateinit var viewModel: SettingsFragmentViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View? {
+    private val component by lazy { requireContext().applicationContext.appComponent }
+
+    override fun onAttach(context: Context) {
+        component.inject(this)
+        super.onAttach(context)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
 
         val binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
+        viewModel = ViewModelProvider(this, viewModelFactory)[SettingsFragmentViewModel::class.java]
+
         with(binding) {
             saveButton.setOnClickListener {
-                if (editText.text.toString().isNotEmpty()) {
-                    parentFragmentManager.setFragmentResult(REQUEST_CODE,
-                        bundleOf(COUNT_VALUE to editText.text.toString()))
-                    findNavController().popBackStack()
+                val entry = editText.text.toString()
+                if (entry.isNotEmpty()) {
+                    if (entry.toInt() <= Configs.MAX_RESULTS_VALUE.toInt()) {
+                        viewModel.updateBooksCount(editText.text.toString().toInt())
+                    } else {
+                        Snackbar.make(root,
+                            getString(R.string.invalid_value_text),
+                            Snackbar.LENGTH_SHORT).show()
+                    }
                 } else {
-                    val snackbar = Snackbar.make(root, getString(R.string.emptyFieldText), Snackbar.LENGTH_SHORT)
-                    snackbar.show()
+                    Snackbar.make(root, getString(R.string.emptyFieldText), Snackbar.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
-        return binding.root
-    }
 
-    companion object {
-        const val COUNT_VALUE = "COUNT"
-        const val REQUEST_CODE = "COUNT_REQUEST_CODE"
+        viewModel.isDataUpdated = { findNavController().popBackStack() }
+
+        return binding.root
     }
 }

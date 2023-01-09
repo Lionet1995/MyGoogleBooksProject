@@ -6,9 +6,10 @@ import com.example.mygooglebooksproject.presentation.fragments.SettingsFragment
 import dagger.Component
 import javax.inject.Singleton
 
-
 @Singleton
 @Component(modules = [AppModule::class, DataModule::class, DomainModule::class, NetworkModule::class])
 interface AppComponent {
+    val booksListAdapter: BooksListAdapter
     fun inject(booksListFragment: BooksListFragment)
+    fun inject(settingsFragment: SettingsFragment)
 }

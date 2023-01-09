@@ -6,4 +6,5 @@
     <string name="book_name">Book name</string>
     <string name="search_books">Search book...</string>
     <string name="save_changes">Save Changes</string>
+    <string name="invalid_value_text">invalid value, the value cannot be greater than 40</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.mygooglebooksproject.presentation.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,13 +12,14 @@ class BooksListAdapter(
 ) : RecyclerView.Adapter<BooksViewHolder>(){
 
     var itemsCount = DEFAULT_COUNT
-
+    @SuppressLint("NotifyDataSetChanged")
     set(newValue) {
         field = newValue
         notifyDataSetChanged()
     }
 
     var books: List<Book> = emptyList()
+        @SuppressLint("NotifyDataSetChanged")
         set(newValue) {
             field = newValue
             notifyDataSetChanged()

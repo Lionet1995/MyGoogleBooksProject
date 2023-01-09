@@ -9,6 +9,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mygooglebooksproject.R
@@ -17,14 +18,13 @@ import com.example.mygooglebooksproject.presentation.adapters.BooksListAdapter
 import com.example.mygooglebooksproject.presentation.app.appComponent
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModel
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModelFactory
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class BooksListFragment : Fragment(), MenuProvider {
     @Inject
     lateinit var viewModelFactory: BooksListViewModelFactory
     private lateinit var viewModel: BooksListViewModel
-
-    private val adapter = BooksListAdapter()
 
     private val component by lazy { requireContext().applicationContext.appComponent }
 
@@ -42,6 +42,8 @@ class BooksListFragment : Fragment(), MenuProvider {
 
         viewModel = ViewModelProvider(this, viewModelFactory)[BooksListViewModel::class.java]
 
+        val adapter = component.booksListAdapter
+
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
@@ -49,16 +51,16 @@ class BooksListFragment : Fragment(), MenuProvider {
             adapter.books = it
         }
 
+        lifecycle.coroutineScope.launch {
+            viewModel.getBooksCount().collect {
+                adapter.itemsCount = it
+            }
+        }
+
         binding.settingsButton.setOnClickListener {
             goToSettings()
         }
 
-        parentFragmentManager.setFragmentResultListener(SettingsFragment.REQUEST_CODE,
-            viewLifecycleOwner) { _, data ->
-            data.getString(SettingsFragment.COUNT_VALUE)?.let {
-                adapter.itemsCount = it.toInt()
-            }
-        }
         return binding.root
     }
 
@@ -99,23 +101,19 @@ class BooksListFragment : Fragment(), MenuProvider {
         return true
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ITEMS_COUNT_KEY, adapter.itemsCount)
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putInt(ITEMS_COUNT_KEY, adapter.itemsCount)
+//    }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        if (savedInstanceState != null) {
-            adapter.itemsCount = savedInstanceState.getInt(ITEMS_COUNT_KEY);
-        }
-    }
+//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+//        super.onViewStateRestored(savedInstanceState)
+//        if (savedInstanceState != null) {
+//            adapter.itemsCount = savedInstanceState.getInt(ITEMS_COUNT_KEY);
+//        }
+//    }
 
     private fun goToSettings() {
         findNavController().navigate(R.id.action_booksListFragment_to_settingsFragment)
-    }
-
-    companion object {
-        const val ITEMS_COUNT_KEY = "countKey"
     }
 }

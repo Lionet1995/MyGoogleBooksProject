@@ -8,5 +8,4 @@ fun ImageView.loadImageFromUrl(url: String) {
         .load(url)
         .centerCrop()
         .into(this)
-
 }
