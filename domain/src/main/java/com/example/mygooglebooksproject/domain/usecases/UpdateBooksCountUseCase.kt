@@ -1,6 +1,5 @@
 package com.example.mygooglebooksproject.domain.usecases
 
-import com.example.mygooglebooksproject.domain.interfaces.IBooksRepository
 import com.example.mygooglebooksproject.domain.interfaces.IUserSettingsRepository
 
 class UpdateBooksCountUseCase(private val userSettings: IUserSettingsRepository) {

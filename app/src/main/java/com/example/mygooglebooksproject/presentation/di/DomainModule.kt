@@ -4,6 +4,7 @@ import com.example.mygooglebooksproject.domain.usecases.GetBooksByUserEntryUseCa
 import com.example.mygooglebooksproject.domain.interfaces.IBooksRepository
 import com.example.mygooglebooksproject.domain.interfaces.IUserSettingsRepository
 import com.example.mygooglebooksproject.domain.usecases.GetBooksCountUseCase
+import com.example.mygooglebooksproject.domain.usecases.GetLastViewedBooksUseCase
 import com.example.mygooglebooksproject.domain.usecases.UpdateBooksCountUseCase
 import dagger.Module
 import dagger.Provides
@@ -24,5 +25,10 @@ class DomainModule {
     @Provides
     fun provideGetBooksCountUseCase(userSettingsRepository: IUserSettingsRepository): GetBooksCountUseCase {
         return GetBooksCountUseCase(userSettingsRepository)
+    }
+
+    @Provides
+    fun provideGetLastViewedBooksUseCase(booksRepository: IBooksRepository): GetLastViewedBooksUseCase {
+        return GetLastViewedBooksUseCase(booksRepository)
     }
 }

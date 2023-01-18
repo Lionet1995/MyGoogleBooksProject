@@ -1,10 +1,12 @@
-package com.example.mygooglebooksproject.data.source
+package com.example.mygooglebooksproject.data.source.remote
 
+import android.util.Log
 import com.example.mygooglebooksproject.data.api.BooksService
 import com.example.mygooglebooksproject.data.models.SearchResult
 import javax.inject.Inject
 
-class BooksNetworkDataSource @Inject constructor(private val booksService: BooksService) : IBooksNetworkDataSource {
+class BooksNetworkDataSource @Inject constructor(private val booksService: BooksService) :
+    IBooksNetworkDataSource {
     override suspend fun getBooks(entry: String): SearchResult {
         var books = SearchResult(listOf())
         try {

@@ -13,3 +13,14 @@ fun SearchResult.convertToDomainModel(): List<Book> {
         )
     }
 }
+
+fun SearchResult.convertToDatabaseModel(): List<RoomBookModel> {
+    return items.map {
+        RoomBookModel(
+            id = it.id,
+            title = it.volumeInfo.title,
+            description = it.volumeInfo.description,
+            source = it.volumeInfo.imageLinks?.smallThumbnail
+        )
+    }
+}

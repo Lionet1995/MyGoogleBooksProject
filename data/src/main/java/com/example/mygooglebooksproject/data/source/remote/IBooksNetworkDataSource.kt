@@ -1,4 +1,4 @@
-package com.example.mygooglebooksproject.data.source
+package com.example.mygooglebooksproject.data.source.remote
 
 import com.example.mygooglebooksproject.data.models.SearchResult
 

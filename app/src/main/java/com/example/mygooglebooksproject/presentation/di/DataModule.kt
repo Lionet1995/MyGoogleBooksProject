@@ -4,8 +4,11 @@ import android.content.Context
 import com.example.mygooglebooksproject.data.api.BooksService
 import com.example.mygooglebooksproject.data.repositories.BooksRepository
 import com.example.mygooglebooksproject.data.repositories.UserSettingsRepository
-import com.example.mygooglebooksproject.data.source.BooksNetworkDataSource
-import com.example.mygooglebooksproject.data.source.IBooksNetworkDataSource
+import com.example.mygooglebooksproject.data.source.local.BooksLocalDataSource
+import com.example.mygooglebooksproject.data.source.local.IBooksLocalDataSource
+import com.example.mygooglebooksproject.data.source.remote.BooksNetworkDataSource
+import com.example.mygooglebooksproject.data.source.remote.IBooksNetworkDataSource
+import com.example.mygooglebooksproject.data.storages.BooksDatabase
 import com.example.mygooglebooksproject.data.storages.IUserSettingsStorage
 import com.example.mygooglebooksproject.data.storages.DataStorePrefUserSettingsStorage
 import com.example.mygooglebooksproject.domain.interfaces.IBooksRepository
@@ -23,14 +26,20 @@ class DataModule {
         return BooksNetworkDataSource(booksService)
     }
 
+    @Provides
+    fun provideBooksLocalDataSource(booksDatabase: BooksDatabase): IBooksLocalDataSource {
+        return BooksLocalDataSource(booksDatabase)
+    }
 
     @Provides
     @Singleton
     fun provideBooksRepository(
-        booksNetworkDataSource: BooksNetworkDataSource
+        booksNetworkDataSource: BooksNetworkDataSource,
+        booksLocalDataSource: BooksLocalDataSource
     ): IBooksRepository {
         return BooksRepository(
-            booksNetworkDataSource = booksNetworkDataSource
+            booksNetworkDataSource = booksNetworkDataSource,
+            booksLocalDataSource = booksLocalDataSource
         )
     }
 

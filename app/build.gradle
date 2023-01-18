@@ -76,4 +76,10 @@ dependencies {
     // Moshi dependency for DI
     implementation "com.squareup.moshi:moshi:1.11.0"
     implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
+
+    //room dependency for DI
+    implementation("androidx.room:room-runtime:2.5.0")
+    annotationProcessor("androidx.room:room-compiler:2.5.0")
+    kapt("androidx.room:room-compiler:2.5.0")
+    implementation("androidx.room:room-ktx:2.5.0")
 }

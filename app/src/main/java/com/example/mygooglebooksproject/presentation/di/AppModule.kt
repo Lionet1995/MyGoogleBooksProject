@@ -3,6 +3,7 @@ package com.example.mygooglebooksproject.presentation.di
 import android.content.Context
 import com.example.mygooglebooksproject.domain.usecases.GetBooksByUserEntryUseCase
 import com.example.mygooglebooksproject.domain.usecases.GetBooksCountUseCase
+import com.example.mygooglebooksproject.domain.usecases.GetLastViewedBooksUseCase
 import com.example.mygooglebooksproject.domain.usecases.UpdateBooksCountUseCase
 import com.example.mygooglebooksproject.presentation.adapters.BooksListAdapter
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModelFactory
@@ -28,11 +29,13 @@ class AppModule(val context: Context) {
     @Provides
     fun provideBooksListViewModelFactory(
         getBooksByUserEntryUseCase: GetBooksByUserEntryUseCase,
-        getBooksCountUseCase: GetBooksCountUseCase
+        getBooksCountUseCase: GetBooksCountUseCase,
+        getLastViewedBooksUseCase: GetLastViewedBooksUseCase
     ): BooksListViewModelFactory {
         return BooksListViewModelFactory(
             getBooksByUserEntryUseCase = getBooksByUserEntryUseCase,
-            getBooksCountUseCase = getBooksCountUseCase
+            getBooksCountUseCase = getBooksCountUseCase,
+            getLastViewedBooksUseCase = getLastViewedBooksUseCase
         )
     }
 
