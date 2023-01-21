@@ -3,6 +3,7 @@ package com.example.mygooglebooksproject.presentation.fragments
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -14,10 +15,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mygooglebooksproject.R
 import com.example.mygooglebooksproject.databinding.FragmentBooksListBinding
-import com.example.mygooglebooksproject.presentation.adapters.BooksListAdapter
 import com.example.mygooglebooksproject.presentation.app.appComponent
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModel
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModelFactory
+import com.example.mygooglebooksproject.presentation.viewmodels.UiState
+import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +38,7 @@ class BooksListFragment : Fragment(), MenuProvider {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         val binding = FragmentBooksListBinding.inflate(inflater, container, false)
 
@@ -47,8 +49,27 @@ class BooksListFragment : Fragment(), MenuProvider {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
-        viewModel.booksList.observe(viewLifecycleOwner) {
-            adapter.books = it
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+            when (uiState) {
+                is UiState.Success -> {
+                    progressLayout.visibility = View.GONE
+                    adapter.books = uiState.result
+//                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                }
+
+                is UiState.Loading -> {
+                    progressLayout.visibility = View.VISIBLE
+//                    requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            }
+
+                is UiState.Error -> {
+                    progressLayout.visibility = View.GONE
+//                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    Toast.makeText(requireContext(), uiState.error, Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
         }
 
         lifecycle.coroutineScope.launch {
@@ -70,7 +91,6 @@ class BooksListFragment : Fragment(), MenuProvider {
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.menu, menu)
         val item = menu.findItem(R.id.action_search)
@@ -85,7 +105,7 @@ class BooksListFragment : Fragment(), MenuProvider {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
-                    viewModel.searchBooksByEntry(query)
+                    viewModel.getBooksList(query)
                     return true
                 }
                 return false
@@ -100,18 +120,6 @@ class BooksListFragment : Fragment(), MenuProvider {
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
         return true
     }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putInt(ITEMS_COUNT_KEY, adapter.itemsCount)
-//    }
-
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        if (savedInstanceState != null) {
-//            adapter.itemsCount = savedInstanceState.getInt(ITEMS_COUNT_KEY);
-//        }
-//    }
 
     private fun goToSettings() {
         findNavController().navigate(R.id.action_booksListFragment_to_settingsFragment)
