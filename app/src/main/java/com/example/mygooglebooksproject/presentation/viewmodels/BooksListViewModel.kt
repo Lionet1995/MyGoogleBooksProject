@@ -36,22 +36,19 @@ class BooksListViewModel(
 
     private fun updateUiState(entry: String?, result: List<Book>) {
         _uiState.value = when {
-            entry.isNullOrEmpty() && result.isEmpty() -> UiState.Error(LOCAL_ERROR)
-            entry != null && result.isEmpty() -> UiState.Error(REMOTE_ERROR)
+            entry.isNullOrEmpty() && result.isEmpty() -> UiState.Empty
+            entry != null && result.isEmpty() -> UiState.NoResults
             else -> UiState.Success(result)
         }
     }
 
     fun getBooksCount(): Flow<Int> = getBooksCountUseCase.execute()
-
-    companion object {
-        const val LOCAL_ERROR = "You haven't searched for books yet, use the search"
-        const val REMOTE_ERROR = "Something went wrong, try again"
-    }
 }
 
 sealed class UiState {
     data class Success(val result: List<Book>) : UiState()
-    data class Error(val error: String) : UiState()
+    object Empty : UiState()
+    object NoResults : UiState()
     object Loading : UiState()
+    //add error state
 }

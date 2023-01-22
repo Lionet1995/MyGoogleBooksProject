@@ -22,6 +22,9 @@ class SettingsFragment : Fragment() {
     lateinit var viewModelFactory: SettingsFragmentViewModelFactory
     private lateinit var viewModel: SettingsFragmentViewModel
 
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
     private val component by lazy { requireContext().applicationContext.appComponent }
 
     override fun onAttach(context: Context) {
@@ -35,7 +38,7 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
 
-        val binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(this, viewModelFactory)[SettingsFragmentViewModel::class.java]
 
@@ -60,5 +63,10 @@ class SettingsFragment : Fragment() {
         viewModel.isDataUpdated = { findNavController().popBackStack() }
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

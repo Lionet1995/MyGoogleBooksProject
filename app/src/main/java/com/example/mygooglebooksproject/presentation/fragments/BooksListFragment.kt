@@ -3,7 +3,6 @@ package com.example.mygooglebooksproject.presentation.fragments
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -19,14 +18,17 @@ import com.example.mygooglebooksproject.presentation.app.appComponent
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModel
 import com.example.mygooglebooksproject.presentation.viewmodels.BooksListViewModelFactory
 import com.example.mygooglebooksproject.presentation.viewmodels.UiState
-import kotlinx.android.synthetic.main.loading_layout.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 class BooksListFragment : Fragment(), MenuProvider {
     @Inject
     lateinit var viewModelFactory: BooksListViewModelFactory
     private lateinit var viewModel: BooksListViewModel
+
+    private var _binding: FragmentBooksListBinding? = null
+    private val binding get() = _binding!!
 
     private val component by lazy { requireContext().applicationContext.appComponent }
 
@@ -40,7 +42,7 @@ class BooksListFragment : Fragment(), MenuProvider {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val binding = FragmentBooksListBinding.inflate(inflater, container, false)
+        _binding = FragmentBooksListBinding.inflate(inflater, container, false)
 
         viewModel = ViewModelProvider(this, viewModelFactory)[BooksListViewModel::class.java]
 
@@ -49,25 +51,36 @@ class BooksListFragment : Fragment(), MenuProvider {
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = adapter
 
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-            when (uiState) {
-                is UiState.Success -> {
-                    progressLayout.visibility = View.GONE
-                    adapter.books = uiState.result
-//                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                }
+        with(binding) {
+            viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+                when (uiState) {
+                    is UiState.Success -> {
 
-                is UiState.Loading -> {
-                    progressLayout.visibility = View.VISIBLE
-//                    requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-//                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            }
+                        adapter.books = uiState.result
+                        shimmerViewContainer.visibility = View.GONE
+                        recyclerView.visibility = View.VISIBLE
+                    }
 
-                is UiState.Error -> {
-                    progressLayout.visibility = View.GONE
-//                    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    Toast.makeText(requireContext(), uiState.error, Toast.LENGTH_LONG)
-                        .show()
+                    is UiState.Loading -> {
+
+                        emptyStateLottie.visibility = View.GONE
+                        noResultsStateLottie.visibility = View.GONE
+                        recyclerView.visibility = View.GONE
+                        shimmerViewContainer.visibility = View.VISIBLE
+
+                    }
+
+                    is UiState.Empty -> {
+
+                        shimmerViewContainer.visibility = View.GONE
+                        emptyStateLottie.visibility = View.VISIBLE
+                    }
+
+                    is UiState.NoResults -> {
+
+                        shimmerViewContainer.visibility = View.GONE
+                        noResultsStateLottie.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -89,6 +102,11 @@ class BooksListFragment : Fragment(), MenuProvider {
         super.onViewCreated(view, savedInstanceState)
         val menuHost: MenuHost = requireHost() as MenuHost
         menuHost.addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {

@@ -13,4 +13,5 @@
     <color name="secondaryGreen">#AED581</color>
     <color name="accentGreen">#CCFF90</color>
     <color name="buttonsGreen">#33691E</color>
+    <color name="shimmerBackground">#dddddd</color>
 </resources>
