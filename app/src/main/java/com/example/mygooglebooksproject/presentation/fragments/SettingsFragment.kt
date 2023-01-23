@@ -46,7 +46,7 @@ class SettingsFragment : Fragment() {
             saveButton.setOnClickListener {
                 val entry = editText.text.toString()
                 if (entry.isNotEmpty()) {
-                    if (entry.toInt() <= Configs.MAX_RESULTS_VALUE.toInt()) {
+                    if (entry.toInt() in  MIN_VALUE..Configs.MAX_RESULTS_VALUE.toInt()) {
                         viewModel.updateBooksCount(editText.text.toString().toInt())
                     } else {
                         Snackbar.make(root,
@@ -68,5 +68,9 @@ class SettingsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val MIN_VALUE = 1
     }
 }
