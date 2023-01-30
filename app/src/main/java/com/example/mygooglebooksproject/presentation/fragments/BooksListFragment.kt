@@ -1,6 +1,7 @@
 package com.example.mygooglebooksproject.presentation.fragments
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
@@ -114,8 +115,8 @@ class BooksListFragment : Fragment(), MenuProvider {
         val item = menu.findItem(R.id.action_search)
         val searchView = item.actionView as SearchView
 
-        view?.width?.let {
-            searchView.maxWidth = it
+        if(resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            searchView.maxWidth = Int.MAX_VALUE
         }
 
         searchView.queryHint = getString(R.string.search_books)
